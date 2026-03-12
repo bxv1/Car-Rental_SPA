@@ -9,6 +9,10 @@ app.service("authService", function ($http) {
     return $http.post(API + "/login", data);
   };
 
+  this.forgotPassword = function (data) {
+    return $http.post(API + "/forgot-password", data);
+  };
+
   this.setSession = function (payload) {
     localStorage.setItem("token", payload.token);
     localStorage.setItem("role", payload.user.role);

@@ -16,6 +16,13 @@ app.config(function ($routeProvider, $httpProvider) {
       title: "Create Account",
       subtitle: "Join DriveNow and start your journey.",
     })
+    .when("/forgot-password", {
+      templateUrl: "views/forgot-password.html",
+      controller: "forgotPasswordController",
+      authRequired: false,
+      title: "Reset Password",
+      subtitle: "Securely set a new password for your account.",
+    })
     .when("/dashboard", {
       templateUrl: "views/dashboard.html",
       controller: "dashboardController",
