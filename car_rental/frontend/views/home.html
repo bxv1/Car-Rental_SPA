@@ -1,0 +1,64 @@
+<section class="landing-wrap position-relative overflow-hidden">
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+
+  <div class="card landing-hero border-0 shadow-lg">
+    <div class="card-body p-4 p-lg-5">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+          <span class="badge text-bg-light mb-3">Welcome to DriveNow</span>
+          <h1 class="display-6 fw-bold mb-3">Smart Car Rentals for Modern Travelers</h1>
+          <p class="lead text-secondary mb-4">
+            DriveNow helps you discover, compare, and book quality rental cars with confidence.
+            From weekend trips to business travel, we make every mile smoother.
+          </p>
+
+          <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-primary btn-lg" href="#!/signup">
+              <i class="bi bi-person-plus-fill me-1"></i>Get Started
+            </a>
+            <a class="btn btn-outline-primary btn-lg" href="#!/login">
+              <i class="bi bi-box-arrow-in-right me-1"></i>Login
+            </a>
+          </div>
+        </div>
+
+        <div class="col-lg-5">
+          <div class="landing-stat-grid">
+            <div class="mini-card">
+              <h3>500+</h3>
+              <p class="mb-0">Cars Available</p>
+            </div>
+            <div class="mini-card">
+              <h3>24/7</h3>
+              <p class="mb-0">Support</p>
+            </div>
+            <div class="mini-card">
+              <h3>98%</h3>
+              <p class="mb-0">Happy Customers</p>
+            </div>
+            <div class="mini-card">
+              <h3>4.9★</h3>
+              <p class="mb-0">Service Rating</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mt-4">
+  <div class="row g-3">
+    <div class="col-md-4" ng-repeat="item in highlights">
+      <div class="card h-100 shadow-sm why-card">
+        <div class="card-body">
+          <div class="icon-bubble mb-3"><i class="bi {{item.icon}}"></i></div>
+          <h5>{{item.title}}</h5>
+          <p class="text-secondary mb-0">{{item.text}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
