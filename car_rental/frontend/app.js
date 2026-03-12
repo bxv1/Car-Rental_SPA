@@ -59,10 +59,10 @@ app.config(function ($routeProvider, $httpProvider) {
   $httpProvider.interceptors.push("authInterceptor");
 });
 
-app.factory("authInterceptor", function ($q, $location, authService) {
+app.factory("authInterceptor", function ($q, $location, $window) {
   return {
     request: function (config) {
-      var token = authService.getToken();
+      var token = $window.localStorage.getItem("token");
       if (token) {
         config.headers = config.headers || {};
         config.headers.Authorization = token;
@@ -71,7 +71,9 @@ app.factory("authInterceptor", function ($q, $location, authService) {
     },
     responseError: function (rejection) {
       if (rejection.status === 401 || rejection.status === 403) {
-        authService.clearSession();
+        $window.localStorage.removeItem("token");
+        $window.localStorage.removeItem("role");
+        $window.localStorage.removeItem("user_name");
         $location.path("/login");
       }
       return $q.reject(rejection);
