@@ -1,12 +1,18 @@
-body{
-background:#f4f6f9;
+body {
+  background: #f4f6f9;
 }
 
-.card{
-border-radius:10px;
+.card {
+  border-radius: 12px;
+  border: none;
 }
 
-.navbar-brand{
-font-weight:bold;
-font-size:22px;
+.navbar-brand {
+  font-weight: 700;
+  font-size: 22px;
+}
+
+.car-card img {
+  height: 180px;
+  object-fit: cover;
 }

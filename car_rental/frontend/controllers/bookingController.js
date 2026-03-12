@@ -1,14 +1,13 @@
-app.controller("bookingController",
-function($scope,bookingService){
+app.controller("bookingController", function ($scope, bookingService) {
+  $scope.bookings = [];
+  $scope.errorMessage = "";
 
-$scope.bookings=[];
-
-bookingService.getMyBookings()
-
-.then(function(res){
-
-$scope.bookings = res.data;
-
-});
-
+  bookingService
+    .getMyBookings()
+    .then(function (res) {
+      $scope.bookings = res.data;
+    })
+    .catch(function () {
+      $scope.errorMessage = "Unable to load bookings right now.";
+    });
 });

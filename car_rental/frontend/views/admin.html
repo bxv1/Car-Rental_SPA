@@ -1,63 +1,51 @@
-<h2>Admin Panel</h2>
+<h2 class="mb-4">Admin Panel</h2>
 
-<h4>Add Car</h4>
+<div class="row g-4">
+  <div class="col-lg-5">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h4 class="mb-3">Add Car</h4>
 
-<form ng-submit="addCar()">
+        <div class="alert alert-danger" ng-if="errorMessage">{{errorMessage}}</div>
+        <div class="alert alert-success" ng-if="successMessage">{{successMessage}}</div>
 
-<input class="form-control mb-2"
-placeholder="Brand"
-ng-model="car.brand">
+        <form ng-submit="addCar()">
+          <input class="form-control mb-2" placeholder="Brand" ng-model="car.brand" required />
+          <input class="form-control mb-2" placeholder="Model" ng-model="car.model" required />
+          <input class="form-control mb-2" type="number" placeholder="Year" ng-model="car.year" required />
+          <input class="form-control mb-2" type="number" placeholder="Price/day" ng-model="car.price" required />
+          <input class="form-control mb-2" placeholder="Image URL" ng-model="car.image" required />
+          <textarea class="form-control mb-3" placeholder="Description" ng-model="car.description"></textarea>
 
-<input class="form-control mb-2"
-placeholder="Model"
-ng-model="car.model">
+          <button class="btn btn-success w-100">Add Car</button>
+        </form>
+      </div>
+    </div>
+  </div>
 
-<input class="form-control mb-2"
-placeholder="Year"
-ng-model="car.year">
+  <div class="col-lg-7">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h4 class="mb-3">Cars</h4>
 
-<input class="form-control mb-2"
-placeholder="Price/day"
-ng-model="car.price">
+        <table class="table table-striped align-middle mb-0">
+          <tr>
+            <th>Brand</th>
+            <th>Model</th>
+            <th>Price/day</th>
+            <th>Action</th>
+          </tr>
 
-<input class="form-control mb-2"
-placeholder="Image URL"
-ng-model="car.image">
-
-<textarea class="form-control mb-2"
-placeholder="Description"
-ng-model="car.description"></textarea>
-
-<button class="btn btn-success">
-Add Car
-</button>
-
-</form>
-
-<hr>
-
-<h4>Cars</h4>
-
-<table class="table">
-
-<tr>
-<th>Brand</th>
-<th>Model</th>
-<th>Action</th>
-</tr>
-
-<tr ng-repeat="c in cars">
-
-<td>{{c.brand}}</td>
-<td>{{c.model}}</td>
-
-<td>
-<button class="btn btn-danger"
-ng-click="deleteCar(c.id)">
-Delete
-</button>
-</td>
-
-</tr>
-
-</table>
+          <tr ng-repeat="c in cars">
+            <td>{{c.brand}}</td>
+            <td>{{c.model}}</td>
+            <td>${{c.price_per_day}}</td>
+            <td>
+              <button class="btn btn-sm btn-danger" ng-click="deleteCar(c.id)">Delete</button>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

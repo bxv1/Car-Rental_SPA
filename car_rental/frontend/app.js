@@ -1,56 +1,56 @@
-var app = angular.module("carRentalApp",["ngRoute"]);
+var app = angular.module("carRentalApp", ["ngRoute"]);
 
-app.config(function($routeProvider){
-
-$routeProvider
-
-.when("/login",{
-templateUrl:"views/login.html",
-controller:"loginController"
-})
-
-.when("/signup",{
-templateUrl:"views/signup.html",
-controller:"signupController"
-})
-
-.when("/cars",{
-templateUrl:"views/cars.html",
-controller:"carController"
-})
-
-.when("/dashboard",{
-templateUrl:"views/dashboard.html",
-controller:"bookingController"
-})
-
-.when("/admin",{
-templateUrl:"views/admin.html",
-controller:"adminController"
-})
-
-.otherwise({
-redirectTo:"/login"
+app.config(function ($routeProvider) {
+  $routeProvider
+    .when("/login", {
+      templateUrl: "views/login.html",
+      controller: "loginController",
+      authRequired: false,
+    })
+    .when("/signup", {
+      templateUrl: "views/signup.html",
+      controller: "signupController",
+      authRequired: false,
+    })
+    .when("/cars", {
+      templateUrl: "views/cars.html",
+      controller: "carController",
+      authRequired: true,
+    })
+    .when("/dashboard", {
+      templateUrl: "views/bookings.html",
+      controller: "bookingController",
+      authRequired: true,
+    })
+    .when("/admin", {
+      templateUrl: "views/admin.html",
+      controller: "adminController",
+      authRequired: true,
+      role: "admin",
+    })
+    .otherwise({
+      redirectTo: "/login",
+    });
 });
 
-});
+app.run(function ($rootScope, $location) {
+  $rootScope.$on("$routeChangeStart", function (event, next) {
+    if (!next || next.authRequired === false) {
+      return;
+    }
 
-app.run(function($rootScope,$location){
+    var token = localStorage.getItem("token");
+    var role = localStorage.getItem("role");
 
-$rootScope.$on("$routeChangeStart",function(event,next){
+    if (!token) {
+      event.preventDefault();
+      $location.path("/login");
+      return;
+    }
 
-const token = localStorage.getItem("token");
-const role = localStorage.getItem("role");
-
-if(!token){
-$location.path("/login");
-return;
-}
-
-if(next.originalPath === "/admin" && role !== "admin"){
-$location.path("/dashboard");
-}
-
-});
-
+    if (next.role === "admin" && role !== "admin") {
+      event.preventDefault();
+      $location.path("/dashboard");
+    }
+  });
 });

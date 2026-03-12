@@ -1,23 +1,18 @@
-<div class="col-md-4 offset-md-4">
+<div class="row justify-content-center">
+  <div class="col-md-5 col-lg-4">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h3 class="mb-3">Login</h3>
 
-<h3>Login</h3>
+        <div class="alert alert-danger" ng-if="errorMessage">{{errorMessage}}</div>
 
-<form ng-submit="login()">
+        <form ng-submit="login()">
+          <input class="form-control mb-2" type="email" placeholder="Email" ng-model="user.email" required />
+          <input class="form-control mb-3" type="password" placeholder="Password" ng-model="user.password" required />
 
-<input class="form-control mb-2"
-type="email"
-placeholder="Email"
-ng-model="user.email">
-
-<input class="form-control mb-2"
-type="password"
-placeholder="Password"
-ng-model="user.password">
-
-<button class="btn btn-primary w-100">
-Login
-</button>
-
-</form>
-
+          <button class="btn btn-primary w-100">Login</button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
