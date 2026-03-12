@@ -1,21 +1,88 @@
-<h2>My Bookings</h2>
+<div class="row g-4">
+  <div class="col-12">
+    <div class="card glass-card">
+      <div class="card-body d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <div>
+          <h4 class="mb-1">Hi, {{userName}} 👋</h4>
+          <p class="mb-0 text-secondary">Ready for your next drive? Explore and manage everything from here.</p>
+        </div>
+        <div class="d-flex gap-2">
+          <a class="btn btn-primary" href="#!/cars"><i class="bi bi-car-front-fill me-1"></i>Book a Car</a>
+          <a class="btn btn-outline-primary" href="#!/bookings"><i class="bi bi-calendar-check me-1"></i>My Bookings</a>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<table class="table">
+  <div class="col-6 col-lg-3">
+    <div class="card stat-card">
+      <div class="card-body">
+        <p class="text-secondary mb-1">Total Bookings</p>
+        <h3 class="mb-0">{{stats.total}}</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="card stat-card border-warning-subtle">
+      <div class="card-body">
+        <p class="text-secondary mb-1">Pending</p>
+        <h3 class="mb-0 text-warning">{{stats.pending}}</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="card stat-card border-success-subtle">
+      <div class="card-body">
+        <p class="text-secondary mb-1">Approved</p>
+        <h3 class="mb-0 text-success">{{stats.approved}}</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="card stat-card border-danger-subtle">
+      <div class="card-body">
+        <p class="text-secondary mb-1">Cancelled</p>
+        <h3 class="mb-0 text-danger">{{stats.cancelled}}</h3>
+      </div>
+    </div>
+  </div>
 
-<tr>
-<th>Car</th>
-<th>Pickup</th>
-<th>Return</th>
-<th>Status</th>
-</tr>
+  <div class="col-12" ng-if="loading">
+    <div class="card"><div class="card-body text-center p-4">Loading dashboard...</div></div>
+  </div>
 
-<tr ng-repeat="b in bookings">
+  <div class="col-12" ng-if="errorMessage">
+    <div class="alert alert-danger">{{errorMessage}}</div>
+  </div>
 
-<td>{{b.car_id}}</td>
-<td>{{b.pickup_date}}</td>
-<td>{{b.return_date}}</td>
-<td>{{b.status}}</td>
-
-</tr>
-
-</table>
+  <div class="col-12" ng-if="!loading">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h5 class="mb-3">Recent Bookings</h5>
+        <div class="table-responsive">
+          <table class="table align-middle mb-0">
+            <thead>
+              <tr>
+                <th>Car ID</th>
+                <th>Pickup</th>
+                <th>Return</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-if="recentBookings.length === 0">
+                <td colspan="4" class="text-center text-muted">No recent bookings yet.</td>
+              </tr>
+              <tr ng-repeat="b in recentBookings">
+                <td>{{b.car_id}}</td>
+                <td>{{b.pickup_date | date:'yyyy-MM-dd'}}</td>
+                <td>{{b.return_date | date:'yyyy-MM-dd'}}</td>
+                <td><span class="badge text-bg-secondary">{{b.status}}</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
