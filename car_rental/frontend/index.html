@@ -43,6 +43,7 @@
     <script src="controllers/loginController.js"></script>
     <script src="controllers/signupController.js"></script>
     <script src="controllers/forgotPasswordController.js"></script>
+    <script src="controllers/homeController.js"></script>
     <script src="controllers/dashboardController.js"></script>
     <script src="controllers/carController.js"></script>
     <script src="controllers/bookingController.js"></script>
@@ -89,12 +90,9 @@
           </ul>
 
           <div class="ms-auto d-flex gap-2" ng-if="!isLoggedIn()">
-            <a class="btn btn-light" href="#{{ currentPath() === '/login' ? '!/signup' : '!/login' }}">
-              {{ currentPath() === '/login' ? 'Create account' : 'Login' }}
-            </a>
-            <a class="btn btn-primary" href="#{{ currentPath() === '/signup' ? '!/login' : '!/signup' }}">
-              {{ currentPath() === '/signup' ? 'Have account?' : 'Signup' }}
-            </a>
+            <a class="btn btn-light" ng-if="currentPath() !== '/home' && currentPath() !== '/'" href="#!/home">Home</a>
+            <a class="btn btn-light" ng-if="currentPath() !== '/login'" href="#!/login">Login</a>
+            <a class="btn btn-primary" ng-if="currentPath() !== '/signup'" href="#!/signup">Signup</a>
           </div>
         </div>
       </div>

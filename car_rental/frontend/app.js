@@ -2,6 +2,20 @@ var app = angular.module("carRentalApp", ["ngRoute"]);
 
 app.config(function ($routeProvider, $httpProvider) {
   $routeProvider
+    .when("/", {
+      templateUrl: "views/home.html",
+      controller: "homeController",
+      authRequired: false,
+      title: "Welcome to DriveNow",
+      subtitle: "Premium car rentals made easy.",
+    })
+    .when("/home", {
+      templateUrl: "views/home.html",
+      controller: "homeController",
+      authRequired: false,
+      title: "Welcome to DriveNow",
+      subtitle: "Premium car rentals made easy.",
+    })
     .when("/login", {
       templateUrl: "views/login.html",
       controller: "loginController",
@@ -60,7 +74,7 @@ app.config(function ($routeProvider, $httpProvider) {
       subtitle: "Manage cars and keep inventory up to date.",
     })
     .otherwise({
-      redirectTo: "/login",
+      redirectTo: "/home",
     });
 
   $httpProvider.interceptors.push("authInterceptor");
