@@ -1,0 +1,40 @@
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h4 class="mb-3">My Profile</h4>
+
+        <div class="alert alert-danger" ng-if="errorMessage">{{errorMessage}}</div>
+        <div class="alert alert-success" ng-if="successMessage">{{successMessage}}</div>
+
+        <div ng-if="loading" class="text-center py-3">Loading profile...</div>
+
+        <form ng-if="!loading" ng-submit="saveProfile()" class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Name</label>
+            <input class="form-control" ng-model="form.name" required />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Phone</label>
+            <input class="form-control" ng-model="form.phone" required />
+          </div>
+          <div class="col-12">
+            <label class="form-label">Email (read only)</label>
+            <input class="form-control" ng-model="form.email" disabled />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">New Password</label>
+            <input class="form-control" type="password" ng-model="form.newPassword" placeholder="Leave empty to keep current" />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Confirm New Password</label>
+            <input class="form-control" type="password" ng-model="form.confirmPassword" />
+          </div>
+          <div class="col-12">
+            <button class="btn btn-primary" ng-disabled="saving">{{saving ? 'Saving...' : 'Save Changes'}}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
