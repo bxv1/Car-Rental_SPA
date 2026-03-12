@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html ng-app="carRentalApp">
+
+<head>
+<meta charset="UTF-8">
+<title>Car Rental</title>
+
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
+<link rel="stylesheet" href="css/style.css">
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular-route.js"></script>
+
+<script src="app.js"></script>
+
+<script src="services/authService.js"></script>
+<script src="services/carService.js"></script>
+<script src="services/bookingService.js"></script>
+
+<script src="controllers/loginController.js"></script>
+<script src="controllers/signupController.js"></script>
+<script src="controllers/carController.js"></script>
+<script src="controllers/bookingController.js"></script>
+<script src="controllers/adminController.js"></script>
+<script src="controllers/navController.js"></script>
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" ng-controller="navController">
+
+<div class="container">
+
+<a class="navbar-brand" href="#!/cars">Car-Rental</a>
+
+<div ng-if="!isLoggedIn()">
+
+<a class="btn btn-light me-2"
+ng-if="currentPath()!='/login'"
+href="#!/login">
+Login
+</a>
+
+<a class="btn btn-success"
+ng-if="currentPath()!='/signup'"
+href="#!/signup">
+Signup
+</a>
+
+</div>
+
+<div ng-if="isLoggedIn()">
+
+<a class="btn btn-warning me-2"
+ng-if="currentPath()!='/dashboard'"
+href="#!/dashboard">
+Dashboard
+</a>
+
+<a class="btn btn-info me-2"
+ng-if="currentPath()!='/cars'"
+href="#!/cars">
+Cars
+</a>
+
+<a class="btn btn-secondary me-2"
+ng-if="isAdmin() && currentPath()!='/admin'"
+href="#!/admin">
+Admin
+</a>
+
+<button class="btn btn-danger"
+ng-click="logout()">
+Logout
+</button>
+
+</div>
+
+</div>
+
+</nav>
+
+<div class="container mt-4">
+
+<div ng-view></div>
+
+</div>
+
+</body>
+</html>

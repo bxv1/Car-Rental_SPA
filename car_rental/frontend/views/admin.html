@@ -1,0 +1,63 @@
+<h2>Admin Panel</h2>
+
+<h4>Add Car</h4>
+
+<form ng-submit="addCar()">
+
+<input class="form-control mb-2"
+placeholder="Brand"
+ng-model="car.brand">
+
+<input class="form-control mb-2"
+placeholder="Model"
+ng-model="car.model">
+
+<input class="form-control mb-2"
+placeholder="Year"
+ng-model="car.year">
+
+<input class="form-control mb-2"
+placeholder="Price/day"
+ng-model="car.price">
+
+<input class="form-control mb-2"
+placeholder="Image URL"
+ng-model="car.image">
+
+<textarea class="form-control mb-2"
+placeholder="Description"
+ng-model="car.description"></textarea>
+
+<button class="btn btn-success">
+Add Car
+</button>
+
+</form>
+
+<hr>
+
+<h4>Cars</h4>
+
+<table class="table">
+
+<tr>
+<th>Brand</th>
+<th>Model</th>
+<th>Action</th>
+</tr>
+
+<tr ng-repeat="c in cars">
+
+<td>{{c.brand}}</td>
+<td>{{c.model}}</td>
+
+<td>
+<button class="btn btn-danger"
+ng-click="deleteCar(c.id)">
+Delete
+</button>
+</td>
+
+</tr>
+
+</table>
