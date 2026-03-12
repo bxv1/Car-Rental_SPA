@@ -1,25 +1,19 @@
-app.service("bookingService",function($http){
+app.service("bookingService", function ($http, apiConfig) {
+  var API = apiConfig.bookings;
 
-const API = "http://localhost:5000/api/bookings";
+  this.bookCar = function (data) {
+    return $http.post(API + "/create", data);
+  };
 
-this.bookCar = function(data){
+  this.getMyBookings = function () {
+    return $http.get(API + "/my");
+  };
 
-return $http.post(API+"/create",data,{
-headers:{
-Authorization:localStorage.getItem("token")
-}
-});
+  this.getAllBookings = function () {
+    return $http.get(API);
+  };
 
-};
-
-this.getMyBookings = function(){
-
-return $http.get(API+"/my",{
-headers:{
-Authorization:localStorage.getItem("token")
-}
-});
-
-};
-
+  this.updateStatus = function (id, status) {
+    return $http.put(API + "/" + id + "/status", { status: status });
+  };
 });

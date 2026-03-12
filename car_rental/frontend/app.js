@@ -1,56 +1,123 @@
-var app = angular.module("carRentalApp",["ngRoute"]);
+var app = angular.module("carRentalApp", ["ngRoute"]);
 
-app.config(function($routeProvider){
+app.config(function ($routeProvider, $httpProvider) {
+  $routeProvider
+    .when("/login", {
+      templateUrl: "views/login.html",
+      controller: "loginController",
+      authRequired: false,
+      title: "Welcome Back",
+      subtitle: "Sign in to manage rentals and bookings.",
+    })
+    .when("/signup", {
+      templateUrl: "views/signup.html",
+      controller: "signupController",
+      authRequired: false,
+      title: "Create Account",
+      subtitle: "Join DriveNow and start your journey.",
+    })
+    .when("/forgot-password", {
+      templateUrl: "views/forgot-password.html",
+      controller: "forgotPasswordController",
+      authRequired: false,
+      title: "Reset Password",
+      subtitle: "Securely set a new password for your account.",
+    })
+    .when("/dashboard", {
+      templateUrl: "views/dashboard.html",
+      controller: "dashboardController",
+      authRequired: true,
+      title: "Dashboard",
+      subtitle: "Overview of your recent bookings and quick actions.",
+    })
+    .when("/cars", {
+      templateUrl: "views/cars.html",
+      controller: "carController",
+      authRequired: true,
+      title: "Browse Cars",
+      subtitle: "Choose from modern, reliable cars for every trip.",
+    })
+    .when("/bookings", {
+      templateUrl: "views/bookings.html",
+      controller: "bookingController",
+      authRequired: true,
+      title: "My Bookings",
+      subtitle: "Track all your reservations in one place.",
+    })
+    .when("/profile", {
+      templateUrl: "views/profile.html",
+      controller: "profileController",
+      authRequired: true,
+      title: "My Profile",
+      subtitle: "Update your personal information and password.",
+    })
+    .when("/admin", {
+      templateUrl: "views/admin.html",
+      controller: "adminController",
+      authRequired: true,
+      role: "admin",
+      title: "Admin Control",
+      subtitle: "Manage cars and keep inventory up to date.",
+    })
+    .otherwise({
+      redirectTo: "/login",
+    });
 
-$routeProvider
-
-.when("/login",{
-templateUrl:"views/login.html",
-controller:"loginController"
-})
-
-.when("/signup",{
-templateUrl:"views/signup.html",
-controller:"signupController"
-})
-
-.when("/cars",{
-templateUrl:"views/cars.html",
-controller:"carController"
-})
-
-.when("/dashboard",{
-templateUrl:"views/dashboard.html",
-controller:"bookingController"
-})
-
-.when("/admin",{
-templateUrl:"views/admin.html",
-controller:"adminController"
-})
-
-.otherwise({
-redirectTo:"/login"
+  $httpProvider.interceptors.push("authInterceptor");
 });
 
+app.factory("authInterceptor", function ($q, $location, $window) {
+  return {
+    request: function (config) {
+      var token = $window.localStorage.getItem("token");
+      if (token) {
+        config.headers = config.headers || {};
+        config.headers.Authorization = token.startsWith("Bearer ")
+          ? token
+          : "Bearer " + token;
+      }
+      return config;
+    },
+    responseError: function (rejection) {
+      if (rejection.status === 401 || rejection.status === 403) {
+        $window.localStorage.removeItem("token");
+        $window.localStorage.removeItem("role");
+        $window.localStorage.removeItem("user_name");
+        $location.path("/login");
+      }
+      return $q.reject(rejection);
+    },
+  };
 });
 
-app.run(function($rootScope,$location){
+app.run(function ($rootScope, $location, authService) {
+  $rootScope.$on("$routeChangeStart", function (event, next) {
+    if (!next) {
+      return;
+    }
 
-$rootScope.$on("$routeChangeStart",function(event,next){
+    var isLoggedIn = authService.isLoggedIn();
 
-const token = localStorage.getItem("token");
-const role = localStorage.getItem("role");
+    if (next.authRequired === false && isLoggedIn) {
+      event.preventDefault();
+      $location.path("/dashboard");
+      return;
+    }
 
-if(!token){
-$location.path("/login");
-return;
-}
+    if (next.authRequired && !isLoggedIn) {
+      event.preventDefault();
+      $location.path("/login");
+      return;
+    }
 
-if(next.originalPath === "/admin" && role !== "admin"){
-$location.path("/dashboard");
-}
+    if (next.role === "admin" && !authService.isAdmin()) {
+      event.preventDefault();
+      $location.path("/dashboard");
+    }
+  });
 
-});
-
+  $rootScope.$on("$routeChangeSuccess", function (event, current) {
+    $rootScope.pageTitle = current && current.$$route ? current.$$route.title : "Car Rental";
+    $rootScope.pageSubtitle = current && current.$$route ? current.$$route.subtitle : "";
+  });
 });

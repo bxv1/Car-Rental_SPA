@@ -1,63 +1,163 @@
-<h2>Admin Panel</h2>
+<div class="alert alert-danger" ng-if="errorMessage">{{errorMessage}}</div>
+<div class="alert alert-success" ng-if="successMessage">{{successMessage}}</div>
 
-<h4>Add Car</h4>
+<div class="row g-4 mb-4">
+  <div class="col-lg-5">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h4 class="mb-3">Add New Car</h4>
+        <form ng-submit="addCar()" class="row g-2">
+          <div class="col-6"><input class="form-control" placeholder="Brand" ng-model="car.brand" required /></div>
+          <div class="col-6"><input class="form-control" placeholder="Model" ng-model="car.model" required /></div>
+          <div class="col-6"><input class="form-control" type="number" placeholder="Year" ng-model="car.year" required /></div>
+          <div class="col-6"><input class="form-control" type="number" placeholder="Price/day" ng-model="car.price" required /></div>
+          <div class="col-12"><input class="form-control" placeholder="Image URL" ng-model="car.image" required /></div>
+          <div class="col-12"><textarea class="form-control" rows="3" placeholder="Description" ng-model="car.description"></textarea></div>
+          <div class="col-12">
+            <button class="btn btn-success w-100" ng-disabled="savingCar">{{savingCar ? 'Saving...' : 'Add Car'}}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
-<form ng-submit="addCar()">
+  <div class="col-lg-7">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h4 class="mb-3">Admin Responsibilities</h4>
+        <ul class="mb-0">
+          <li>Maintain car inventory (add, edit, remove, availability).</li>
+          <li>Review and update booking statuses.</li>
+          <li>Manage user accounts and privileges.</li>
+          <li>Monitor platform quality and data consistency.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
 
-<input class="form-control mb-2"
-placeholder="Brand"
-ng-model="car.brand">
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <h4 class="mb-3">Cars Management</h4>
+    <div class="text-center py-3" ng-if="loadingCars">Loading cars...</div>
+    <div class="table-responsive" ng-if="!loadingCars">
+      <table class="table table-striped align-middle mb-0">
+        <thead><tr><th>ID</th><th>Car</th><th>Price/day</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr ng-repeat="c in cars">
+            <td>{{c.id}}</td>
+            <td ng-if="editingCarId !== c.id">{{c.brand}} {{c.model}} ({{c.year}})</td>
+            <td ng-if="editingCarId === c.id" colspan="1">
+              <div class="row g-1">
+                <div class="col-6"><input class="form-control form-control-sm" ng-model="c.editDraft.brand" /></div>
+                <div class="col-6"><input class="form-control form-control-sm" ng-model="c.editDraft.model" /></div>
+                <div class="col-4"><input class="form-control form-control-sm" type="number" ng-model="c.editDraft.year" /></div>
+                <div class="col-8"><input class="form-control form-control-sm" ng-model="c.editDraft.image" placeholder="Image URL" /></div>
+                <div class="col-12"><textarea class="form-control form-control-sm" ng-model="c.editDraft.description"></textarea></div>
+              </div>
+            </td>
 
-<input class="form-control mb-2"
-placeholder="Model"
-ng-model="car.model">
+            <td ng-if="editingCarId !== c.id">${{c.price_per_day}}</td>
+            <td ng-if="editingCarId === c.id"><input class="form-control form-control-sm" type="number" ng-model="c.editDraft.price" /></td>
 
-<input class="form-control mb-2"
-placeholder="Year"
-ng-model="car.year">
+            <td ng-if="editingCarId !== c.id"><span class="badge text-bg-secondary">{{c.status}}</span></td>
+            <td ng-if="editingCarId === c.id">
+              <select class="form-select form-select-sm" ng-model="c.editDraft.status">
+                <option value="available">available</option>
+                <option value="rented">rented</option>
+                <option value="maintenance">maintenance</option>
+              </select>
+            </td>
 
-<input class="form-control mb-2"
-placeholder="Price/day"
-ng-model="car.price">
+            <td>
+              <div class="d-flex flex-wrap gap-1" ng-if="editingCarId !== c.id">
+                <button class="btn btn-sm btn-outline-primary" ng-click="startEditCar(c)">Edit</button>
+                <button class="btn btn-sm btn-outline-danger" ng-click="deleteCar(c.id)">Delete</button>
+              </div>
+              <div class="d-flex flex-wrap gap-1" ng-if="editingCarId === c.id">
+                <button class="btn btn-sm btn-success" ng-click="saveCar(c)">Save</button>
+                <button class="btn btn-sm btn-secondary" ng-click="cancelEditCar()">Cancel</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
-<input class="form-control mb-2"
-placeholder="Image URL"
-ng-model="car.image">
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <h4 class="mb-3">Bookings Management</h4>
+    <div class="text-center py-3" ng-if="loadingBookings">Loading bookings...</div>
+    <div class="table-responsive" ng-if="!loadingBookings">
+      <table class="table table-hover align-middle mb-0">
+        <thead><tr><th>ID</th><th>User</th><th>Car</th><th>Dates</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr ng-repeat="b in bookings">
+            <td>#{{b.id}}</td>
+            <td>{{b.user_name}}<br/><small class="text-muted">{{b.user_email}}</small></td>
+            <td>{{b.brand}} {{b.model}}</td>
+            <td>{{b.pickup_date | date:'yyyy-MM-dd'}} → {{b.return_date | date:'yyyy-MM-dd'}}</td>
+            <td>
+              <select class="form-select form-select-sm" ng-model="b.status">
+                <option value="pending">pending</option>
+                <option value="approved">approved</option>
+                <option value="cancelled">cancelled</option>
+                <option value="completed">completed</option>
+              </select>
+            </td>
+            <td><button class="btn btn-sm btn-primary" ng-click="changeBookingStatus(b)">Update</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
-<textarea class="form-control mb-2"
-placeholder="Description"
-ng-model="car.description"></textarea>
+<div class="card shadow-sm">
+  <div class="card-body">
+    <h4 class="mb-3">Users Management</h4>
+    <div class="text-center py-3" ng-if="loadingUsers">Loading users...</div>
+    <div class="table-responsive" ng-if="!loadingUsers">
+      <table class="table table-striped align-middle mb-0">
+        <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Role</th><th>Actions</th></tr></thead>
+        <tbody>
+          <tr ng-repeat="u in users">
+            <td>{{u.id}}</td>
+            <td ng-if="editingUserId !== u.id">{{u.name}}</td>
+            <td ng-if="editingUserId === u.id"><input class="form-control form-control-sm" ng-model="u.editDraft.name" /></td>
 
-<button class="btn btn-success">
-Add Car
-</button>
+            <td ng-if="editingUserId !== u.id">{{u.email}}</td>
+            <td ng-if="editingUserId === u.id"><input class="form-control form-control-sm" ng-model="u.editDraft.email" /></td>
 
-</form>
+            <td ng-if="editingUserId !== u.id">{{u.phone}}</td>
+            <td ng-if="editingUserId === u.id"><input class="form-control form-control-sm" ng-model="u.editDraft.phone" /></td>
 
-<hr>
+            <td ng-if="editingUserId !== u.id"><span class="badge text-bg-info">{{u.role}}</span></td>
+            <td ng-if="editingUserId === u.id">
+              <select class="form-select form-select-sm" ng-model="u.editDraft.role">
+                <option value="user">user</option>
+                <option value="admin">admin</option>
+              </select>
+            </td>
 
-<h4>Cars</h4>
-
-<table class="table">
-
-<tr>
-<th>Brand</th>
-<th>Model</th>
-<th>Action</th>
-</tr>
-
-<tr ng-repeat="c in cars">
-
-<td>{{c.brand}}</td>
-<td>{{c.model}}</td>
-
-<td>
-<button class="btn btn-danger"
-ng-click="deleteCar(c.id)">
-Delete
-</button>
-</td>
-
-</tr>
-
-</table>
+            <td>
+              <div ng-if="editingUserId !== u.id" class="d-flex gap-1">
+                <button class="btn btn-sm btn-outline-primary" ng-click="startEditUser(u)">Edit</button>
+                <button class="btn btn-sm btn-outline-danger" ng-click="deleteUser(u.id)">Delete</button>
+              </div>
+              <div ng-if="editingUserId === u.id" class="d-grid gap-1">
+                <input class="form-control form-control-sm" type="password" ng-model="u.editDraft.newPassword" placeholder="Optional new password" />
+                <div class="d-flex gap-1">
+                  <button class="btn btn-sm btn-success" ng-click="saveUser(u)">Save</button>
+                  <button class="btn btn-sm btn-secondary" ng-click="cancelEditUser()">Cancel</button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,28 +1,28 @@
 const Car = require("../models/carModel");
 
-exports.getCars = async (req,res)=>{
-
-const [cars] = await Car.getAllCars();
-res.json(cars);
-
+exports.getCars = async (req, res) => {
+  const [cars] = await Car.getAllCars();
+  res.json(cars);
 };
 
-exports.addCar = async (req,res)=>{
+exports.addCar = async (req, res) => {
+  const { brand, model, year, price, image, description } = req.body;
 
-const {brand,model,year,price,image,description} = req.body;
-
-await Car.createCar(brand,model,year,price,image,description);
-
-res.json("Car added");
-
+  await Car.createCar(brand, model, year, price, image, description);
+  res.json("Car added");
 };
 
-exports.deleteCar = async (req,res)=>{
+exports.updateCar = async (req, res) => {
+  const id = req.params.id;
+  const { brand, model, year, price, image, description, status } = req.body;
 
-const id = req.params.id;
+  await Car.updateCar(id, brand, model, year, price, image, description, status);
+  res.json("Car updated");
+};
 
-await Car.deleteCar(id);
+exports.deleteCar = async (req, res) => {
+  const id = req.params.id;
 
-res.json("Car removed");
-
+  await Car.deleteCar(id);
+  res.json("Car removed");
 };
