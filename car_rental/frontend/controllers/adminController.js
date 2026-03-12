@@ -3,16 +3,28 @@ app.controller("adminController", function ($scope, carService) {
   $scope.car = {};
   $scope.successMessage = "";
   $scope.errorMessage = "";
+  $scope.loadingCars = true;
+  $scope.savingCar = false;
 
   function loadCars() {
-    carService.getCars().then(function (res) {
-      $scope.cars = res.data;
-    });
+    $scope.loadingCars = true;
+    carService
+      .getCars()
+      .then(function (res) {
+        $scope.cars = res.data;
+      })
+      .catch(function () {
+        $scope.errorMessage = "Failed to load cars.";
+      })
+      .finally(function () {
+        $scope.loadingCars = false;
+      });
   }
 
   $scope.addCar = function () {
     $scope.successMessage = "";
     $scope.errorMessage = "";
+    $scope.savingCar = true;
 
     carService
       .addCar($scope.car)
@@ -21,8 +33,11 @@ app.controller("adminController", function ($scope, carService) {
         $scope.car = {};
         loadCars();
       })
-      .catch(function () {
-        $scope.errorMessage = "Failed to add car. Check your input and try again.";
+      .catch(function (err) {
+        $scope.errorMessage = typeof err.data === "string" ? err.data : "Failed to add car.";
+      })
+      .finally(function () {
+        $scope.savingCar = false;
       });
   };
 
@@ -38,8 +53,8 @@ app.controller("adminController", function ($scope, carService) {
           return car.id !== id;
         });
       })
-      .catch(function () {
-        $scope.errorMessage = "Failed to delete car.";
+      .catch(function (err) {
+        $scope.errorMessage = typeof err.data === "string" ? err.data : "Failed to delete car.";
       });
   };
 

@@ -1,17 +1,25 @@
 <div class="row justify-content-center">
-  <div class="col-md-5 col-lg-4">
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <h3 class="mb-3">Login</h3>
+  <div class="col-md-6 col-lg-4">
+    <div class="card auth-card shadow-lg">
+      <div class="card-body p-4">
+        <h3 class="mb-1">Login</h3>
+        <p class="text-secondary mb-4">Access your rentals and bookings</p>
 
         <div class="alert alert-danger" ng-if="errorMessage">{{errorMessage}}</div>
 
         <form ng-submit="login()">
-          <input class="form-control mb-2" type="email" placeholder="Email" ng-model="user.email" required />
-          <input class="form-control mb-3" type="password" placeholder="Password" ng-model="user.password" required />
-
-          <button class="btn btn-primary w-100">Login</button>
+          <div class="mb-2">
+            <label class="form-label">Email</label>
+            <input class="form-control" type="email" placeholder="name@example.com" ng-model="user.email" required />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input class="form-control" type="password" placeholder="••••••••" ng-model="user.password" required />
+          </div>
+          <button class="btn btn-primary w-100" ng-disabled="loading">{{loading ? 'Signing in...' : 'Login'}}</button>
         </form>
+
+        <p class="text-center text-secondary mt-3 mb-0">New here? <a href="#!/signup">Create account</a></p>
       </div>
     </div>
   </div>

@@ -1,18 +1,24 @@
 app.controller("loginController", function ($scope, $location, authService) {
+  $scope.user = {};
   $scope.errorMessage = "";
+  $scope.loading = false;
 
   $scope.login = function () {
     $scope.errorMessage = "";
+    $scope.loading = true;
 
     authService
       .login($scope.user)
       .then(function (res) {
-        localStorage.setItem("token", res.data.token);
-        localStorage.setItem("role", res.data.user.role);
+        authService.setSession(res.data);
         $location.path("/dashboard");
       })
-      .catch(function () {
-        $scope.errorMessage = "Invalid email or password.";
+      .catch(function (err) {
+        $scope.errorMessage =
+          typeof err.data === "string" ? err.data : "Unable to login. Please try again.";
+      })
+      .finally(function () {
+        $scope.loading = false;
       });
   };
 });

@@ -1,18 +1,102 @@
-body {
-  background: #f4f6f9;
+:root {
+  --brand-primary: #5b6cff;
+  --brand-secondary: #00b7ff;
+  --bg-soft: #f3f6ff;
+  --text-main: #1f2a44;
 }
 
-.card {
-  border-radius: 12px;
-  border: none;
+body {
+  background: radial-gradient(circle at 10% 10%, #ecf1ff 0%, #f8fbff 40%, #ffffff 100%);
+  color: var(--text-main);
+  min-height: 100vh;
+}
+
+.app-navbar {
+  background: linear-gradient(135deg, #1f2a44 0%, #2b4f9f 55%, #2f7df4 100%);
+  box-shadow: 0 8px 22px rgba(33, 57, 117, 0.28);
 }
 
 .navbar-brand {
+  color: #fff;
   font-weight: 700;
-  font-size: 22px;
+  font-size: 1.2rem;
 }
 
-.car-card img {
-  height: 180px;
+.logo-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #7de4ff, #7f89ff);
+  color: #12203f;
+  font-size: 1.1rem;
+}
+
+.btn-nav {
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.btn-nav:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+.btn-danger-soft {
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #fff;
+  background: rgba(255, 56, 103, 0.2);
+}
+
+.page-hero {
+  background: linear-gradient(120deg, rgba(91, 108, 255, 0.16), rgba(0, 183, 255, 0.08));
+  border-bottom: 1px solid #e6ecff;
+  padding: 1.25rem 0;
+}
+
+.card {
+  border: 1px solid #e8eeff;
+  border-radius: 16px;
+}
+
+.auth-card {
+  border: none;
+}
+
+.glass-card {
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0.85), rgba(245, 250, 255, 0.92));
+  border: 1px solid #dfe9ff;
+}
+
+.stat-card {
+  border: 1px solid #e5ebff;
+}
+
+.car-card .card-img-top {
+  height: 190px;
   object-fit: cover;
+  border-radius: 16px 16px 0 0;
+}
+
+.price-chip {
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #354ac7;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.table thead th {
+  background: #f1f5ff;
+  color: #364a83;
+  border-bottom: none;
+}
+
+@media (max-width: 991px) {
+  .navbar-collapse {
+    margin-top: 0.85rem;
+  }
 }

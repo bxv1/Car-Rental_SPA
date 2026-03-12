@@ -3,6 +3,7 @@ app.controller("carController", function ($scope, carService, bookingService) {
   $scope.bookingDates = {};
   $scope.errorMessage = "";
   $scope.successMessage = "";
+  $scope.loading = true;
 
   function getDayCount(pickupDate, returnDate) {
     var pickup = new Date(pickupDate);
@@ -12,9 +13,23 @@ app.controller("carController", function ($scope, carService, bookingService) {
   }
 
   function loadCars() {
-    carService.getCars().then(function (res) {
-      $scope.cars = res.data;
-    });
+    $scope.loading = true;
+    carService
+      .getCars()
+      .then(function (res) {
+        $scope.cars = res.data;
+        $scope.cars.forEach(function (car) {
+          if (!$scope.bookingDates[car.id]) {
+            $scope.bookingDates[car.id] = { pickup: "", return: "" };
+          }
+        });
+      })
+      .catch(function () {
+        $scope.errorMessage = "Unable to load cars right now.";
+      })
+      .finally(function () {
+        $scope.loading = false;
+      });
   }
 
   $scope.book = function (car) {
@@ -36,7 +51,6 @@ app.controller("carController", function ($scope, carService, bookingService) {
     }
 
     var days = getDayCount(pickup, dropoff);
-
     var booking = {
       car_id: car.id,
       pickup_date: pickup,
@@ -48,10 +62,10 @@ app.controller("carController", function ($scope, carService, bookingService) {
       .bookCar(booking)
       .then(function () {
         $scope.successMessage = "Booking created successfully.";
-        $scope.bookingDates[car.id] = {};
+        $scope.bookingDates[car.id] = { pickup: "", return: "" };
       })
-      .catch(function () {
-        $scope.errorMessage = "Could not create booking. Please try again.";
+      .catch(function (err) {
+        $scope.errorMessage = typeof err.data === "string" ? err.data : "Could not create booking.";
       });
   };
 

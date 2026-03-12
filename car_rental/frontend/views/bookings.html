@@ -1,43 +1,37 @@
-<div class="container px-0">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="mb-0">My Bookings</h2>
-    <a class="btn btn-outline-primary" href="#!/cars">Book a car</a>
-  </div>
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+  <h2 class="mb-0">My Bookings</h2>
+  <a class="btn btn-primary" href="#!/cars"><i class="bi bi-plus-lg me-1"></i>New Booking</a>
+</div>
 
-  <div class="alert alert-danger" ng-if="errorMessage">{{errorMessage}}</div>
+<div class="alert alert-danger" ng-if="errorMessage">{{errorMessage}}</div>
+<div class="card" ng-if="loading"><div class="card-body text-center">Loading bookings...</div></div>
 
-  <div class="card shadow-sm">
-    <div class="card-body">
-      <table class="table table-striped table-hover align-middle mb-0">
-        <thead class="table-dark">
+<div class="card shadow-sm" ng-if="!loading">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead>
           <tr>
             <th>#</th>
-            <th>Car ID</th>
-            <th>Pickup Date</th>
-            <th>Return Date</th>
-            <th>Total Price</th>
+            <th>Car</th>
+            <th>Pickup</th>
+            <th>Return</th>
+            <th>Total</th>
             <th>Status</th>
             <th>Created</th>
           </tr>
         </thead>
-
         <tbody>
           <tr ng-if="bookings.length === 0">
-            <td colspan="7" class="text-center text-muted">No bookings found</td>
+            <td colspan="7" class="text-center text-muted py-4">No bookings found yet.</td>
           </tr>
-
           <tr ng-repeat="b in bookings">
             <td>{{$index + 1}}</td>
-            <td><span class="badge bg-secondary">{{b.car_id}}</span></td>
+            <td>#{{b.car_id}}</td>
             <td>{{b.pickup_date | date:'yyyy-MM-dd'}}</td>
             <td>{{b.return_date | date:'yyyy-MM-dd'}}</td>
-            <td><span class="fw-bold">${{b.total_price}}</span></td>
-            <td>
-              <span class="badge bg-warning" ng-if="b.status=='pending'">Pending</span>
-              <span class="badge bg-success" ng-if="b.status=='approved'">Approved</span>
-              <span class="badge bg-danger" ng-if="b.status=='cancelled'">Cancelled</span>
-              <span class="badge bg-primary" ng-if="b.status=='completed'">Completed</span>
-            </td>
+            <td class="fw-semibold">${{b.total_price}}</td>
+            <td><span class="badge text-bg-secondary">{{b.status}}</span></td>
             <td>{{b.created_at | date:'yyyy-MM-dd'}}</td>
           </tr>
         </tbody>

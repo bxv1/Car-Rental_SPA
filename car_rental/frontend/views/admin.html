@@ -1,23 +1,21 @@
-<h2 class="mb-4">Admin Panel</h2>
-
 <div class="row g-4">
   <div class="col-lg-5">
-    <div class="card shadow-sm">
+    <div class="card shadow-sm h-100">
       <div class="card-body">
-        <h4 class="mb-3">Add Car</h4>
-
+        <h4 class="mb-3">Add New Car</h4>
         <div class="alert alert-danger" ng-if="errorMessage">{{errorMessage}}</div>
         <div class="alert alert-success" ng-if="successMessage">{{successMessage}}</div>
 
-        <form ng-submit="addCar()">
-          <input class="form-control mb-2" placeholder="Brand" ng-model="car.brand" required />
-          <input class="form-control mb-2" placeholder="Model" ng-model="car.model" required />
-          <input class="form-control mb-2" type="number" placeholder="Year" ng-model="car.year" required />
-          <input class="form-control mb-2" type="number" placeholder="Price/day" ng-model="car.price" required />
-          <input class="form-control mb-2" placeholder="Image URL" ng-model="car.image" required />
-          <textarea class="form-control mb-3" placeholder="Description" ng-model="car.description"></textarea>
-
-          <button class="btn btn-success w-100">Add Car</button>
+        <form ng-submit="addCar()" class="row g-2">
+          <div class="col-6"><input class="form-control" placeholder="Brand" ng-model="car.brand" required /></div>
+          <div class="col-6"><input class="form-control" placeholder="Model" ng-model="car.model" required /></div>
+          <div class="col-6"><input class="form-control" type="number" placeholder="Year" ng-model="car.year" required /></div>
+          <div class="col-6"><input class="form-control" type="number" placeholder="Price/day" ng-model="car.price" required /></div>
+          <div class="col-12"><input class="form-control" placeholder="Image URL" ng-model="car.image" required /></div>
+          <div class="col-12"><textarea class="form-control" rows="3" placeholder="Description" ng-model="car.description"></textarea></div>
+          <div class="col-12">
+            <button class="btn btn-success w-100" ng-disabled="savingCar">{{savingCar ? 'Saving...' : 'Add Car'}}</button>
+          </div>
         </form>
       </div>
     </div>
@@ -26,25 +24,33 @@
   <div class="col-lg-7">
     <div class="card shadow-sm">
       <div class="card-body">
-        <h4 class="mb-3">Cars</h4>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h4 class="mb-0">Inventory</h4>
+          <span class="badge text-bg-primary">{{cars.length}} cars</span>
+        </div>
 
-        <table class="table table-striped align-middle mb-0">
-          <tr>
-            <th>Brand</th>
-            <th>Model</th>
-            <th>Price/day</th>
-            <th>Action</th>
-          </tr>
+        <div class="text-center py-4" ng-if="loadingCars">Loading cars...</div>
 
-          <tr ng-repeat="c in cars">
-            <td>{{c.brand}}</td>
-            <td>{{c.model}}</td>
-            <td>${{c.price_per_day}}</td>
-            <td>
-              <button class="btn btn-sm btn-danger" ng-click="deleteCar(c.id)">Delete</button>
-            </td>
-          </tr>
-        </table>
+        <div class="table-responsive" ng-if="!loadingCars">
+          <table class="table table-striped align-middle mb-0">
+            <thead>
+              <tr>
+                <th>Brand</th>
+                <th>Model</th>
+                <th>Price/day</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="c in cars">
+                <td>{{c.brand}}</td>
+                <td>{{c.model}}</td>
+                <td>${{c.price_per_day}}</td>
+                <td><button class="btn btn-sm btn-outline-danger" ng-click="deleteCar(c.id)">Delete</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
