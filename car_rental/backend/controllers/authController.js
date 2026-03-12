@@ -2,40 +2,78 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 
-exports.signup = async (req,res)=>{
+exports.signup = async (req, res) => {
+  try {
+    const { name, email, password, phone } = req.body;
 
-const {name,email,password,phone} = req.body;
+    if (!name || !email || !password || !phone) {
+      return res.status(400).json("All fields are required");
+    }
 
-const hash = await bcrypt.hash(password,10);
+    const [existingRows] = await User.findUserByEmail(email);
+    if (existingRows.length > 0) {
+      return res.status(409).json("Email already in use");
+    }
 
-await User.createUser(name,email,hash,phone);
+    const hash = await bcrypt.hash(password, 10);
+    await User.createUser(name, email, hash, phone);
 
-res.json({message:"User created"});
-
+    return res.json({ message: "User created" });
+  } catch (err) {
+    return res.status(500).json("Failed to create account");
+  }
 };
 
-exports.login = async (req,res)=>{
+exports.login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-const {email,password} = req.body;
+    if (!email || !password) {
+      return res.status(400).json("Email and password are required");
+    }
 
-const [rows] = await User.findUserByEmail(email);
+    const [rows] = await User.findUserByEmail(email);
 
-if(rows.length===0)
-return res.status(404).json("User not found");
+    if (rows.length === 0) {
+      return res.status(404).json("User not found");
+    }
 
-const user = rows[0];
+    const user = rows[0];
 
-const valid = await bcrypt.compare(password,user.password);
+    const valid = await bcrypt.compare(password, user.password);
 
-if(!valid)
-return res.status(401).json("Wrong password");
+    if (!valid) {
+      return res.status(401).json("Wrong password");
+    }
 
-const token = jwt.sign(
-{id:user.id,role:user.role},
-process.env.JWT_SECRET,
-{expiresIn:"24h"}
-);
+    const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, {
+      expiresIn: "24h",
+    });
 
-res.json({token,user});
+    return res.json({ token, user });
+  } catch (err) {
+    return res.status(500).json("Login failed");
+  }
+};
 
+exports.forgotPassword = async (req, res) => {
+  try {
+    const { email, newPassword } = req.body;
+
+    if (!email || !newPassword) {
+      return res.status(400).json("Email and new password are required");
+    }
+
+    const [rows] = await User.findUserByEmail(email);
+    if (rows.length === 0) {
+      return res.status(404).json("No account found with this email");
+    }
+
+    const hash = await bcrypt.hash(newPassword, 10);
+    await User.updatePasswordByEmail(email, hash);
+
+    return res.json({ message: "Password updated successfully" });
+  } catch (err) {
+    return res.status(500).json("Could not reset password");
+  }
 };

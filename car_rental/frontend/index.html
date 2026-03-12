@@ -1,93 +1,99 @@
 <!DOCTYPE html>
 <html ng-app="carRentalApp">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DriveNow | Car Rental</title>
 
-<head>
-<meta charset="UTF-8">
-<title>Car Rental</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link rel="stylesheet" href="css/style.css" />
 
-<link rel="stylesheet"
-href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular-route.js"></script>
 
-<link rel="stylesheet" href="css/style.css">
+    <script src="app.js"></script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.3/angular-route.js"></script>
+    <script src="services/authService.js"></script>
+    <script src="services/carService.js"></script>
+    <script src="services/bookingService.js"></script>
 
-<script src="app.js"></script>
+    <script src="controllers/loginController.js"></script>
+    <script src="controllers/signupController.js"></script>
+    <script src="controllers/forgotPasswordController.js"></script>
+    <script src="controllers/dashboardController.js"></script>
+    <script src="controllers/carController.js"></script>
+    <script src="controllers/bookingController.js"></script>
+    <script src="controllers/adminController.js"></script>
+    <script src="controllers/navController.js"></script>
+  </head>
 
-<script src="services/authService.js"></script>
-<script src="services/carService.js"></script>
-<script src="services/bookingService.js"></script>
+  <body ng-controller="navController">
+    <nav class="navbar navbar-expand-lg app-navbar">
+      <div class="container py-2">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="#{{ isLoggedIn() ? '!/dashboard' : '!/login' }}">
+          <span class="logo-icon"><i class="bi bi-car-front-fill"></i></span>
+          <span>DriveNow</span>
+        </a>
 
-<script src="controllers/loginController.js"></script>
-<script src="controllers/signupController.js"></script>
-<script src="controllers/carController.js"></script>
-<script src="controllers/bookingController.js"></script>
-<script src="controllers/adminController.js"></script>
-<script src="controllers/navController.js"></script>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#mainNav"
+          aria-controls="mainNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-</head>
+        <div class="collapse navbar-collapse" id="mainNav">
+          <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2" ng-if="isLoggedIn()">
+            <li class="nav-item" ng-repeat="link in navLinks" ng-if="showNavItem(link)">
+              <a class="btn btn-nav" href="#{{'!' + link.path}}">
+                <i class="bi {{link.icon}} me-1"></i>{{link.label}}
+              </a>
+            </li>
+            <li class="nav-item ms-lg-2 text-light fw-semibold px-2">
+              <i class="bi bi-person-circle me-1"></i>{{getUserName()}}
+            </li>
+            <li class="nav-item">
+              <button class="btn btn-danger-soft" ng-click="logout()">
+                <i class="bi bi-box-arrow-right me-1"></i>Logout
+              </button>
+            </li>
+          </ul>
 
-<body>
+          <div class="ms-auto d-flex gap-2" ng-if="!isLoggedIn()">
+            <a class="btn btn-light" href="#{{ currentPath() === '/login' ? '!/signup' : '!/login' }}">
+              {{ currentPath() === '/login' ? 'Create account' : 'Login' }}
+            </a>
+            <a class="btn btn-primary" href="#{{ currentPath() === '/signup' ? '!/login' : '!/signup' }}">
+              {{ currentPath() === '/signup' ? 'Have account?' : 'Signup' }}
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark" ng-controller="navController">
+    <header class="page-hero" ng-if="isLoggedIn()">
+      <div class="container">
+        <h1 class="h3 mb-1">{{pageTitle}}</h1>
+        <p class="mb-0 text-light-emphasis">{{pageSubtitle}}</p>
+      </div>
+    </header>
 
-<div class="container">
+    <main class="container py-4">
+      <div ng-view></div>
+    </main>
 
-<a class="navbar-brand" href="#!/cars">Car-Rental</a>
-
-<div ng-if="!isLoggedIn()">
-
-<a class="btn btn-light me-2"
-ng-if="currentPath()!='/login'"
-href="#!/login">
-Login
-</a>
-
-<a class="btn btn-success"
-ng-if="currentPath()!='/signup'"
-href="#!/signup">
-Signup
-</a>
-
-</div>
-
-<div ng-if="isLoggedIn()">
-
-<a class="btn btn-warning me-2"
-ng-if="currentPath()!='/dashboard'"
-href="#!/dashboard">
-Dashboard
-</a>
-
-<a class="btn btn-info me-2"
-ng-if="currentPath()!='/cars'"
-href="#!/cars">
-Cars
-</a>
-
-<a class="btn btn-secondary me-2"
-ng-if="isAdmin() && currentPath()!='/admin'"
-href="#!/admin">
-Admin
-</a>
-
-<button class="btn btn-danger"
-ng-click="logout()">
-Logout
-</button>
-
-</div>
-
-</div>
-
-</nav>
-
-<div class="container mt-4">
-
-<div ng-view></div>
-
-</div>
-
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
 </html>
