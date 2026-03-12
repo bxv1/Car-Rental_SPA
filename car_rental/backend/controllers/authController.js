@@ -50,7 +50,16 @@ exports.login = async (req, res) => {
       expiresIn: "24h",
     });
 
-    return res.json({ token, user });
+    return res.json({
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role: user.role,
+      },
+    });
   } catch (err) {
     return res.status(500).json("Login failed");
   }
@@ -76,4 +85,30 @@ exports.forgotPassword = async (req, res) => {
   } catch (err) {
     return res.status(500).json("Could not reset password");
   }
+};
+
+exports.getMyProfile = async (req, res) => {
+  const [rows] = await User.findUserById(req.user.id);
+  if (rows.length === 0) {
+    return res.status(404).json("User not found");
+  }
+
+  return res.json(rows[0]);
+};
+
+exports.updateMyProfile = async (req, res) => {
+  const { name, phone, newPassword } = req.body;
+
+  if (!name || !phone) {
+    return res.status(400).json("Name and phone are required");
+  }
+
+  await User.updateProfile(req.user.id, name, phone);
+
+  if (newPassword) {
+    const hash = await bcrypt.hash(newPassword, 10);
+    await User.updatePasswordById(req.user.id, hash);
+  }
+
+  return res.json("Profile updated");
 };

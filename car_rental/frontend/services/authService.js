@@ -1,5 +1,5 @@
-app.service("authService", function ($http) {
-  var API = "http://localhost:5000/api/auth";
+app.service("authService", function ($http, apiConfig) {
+  var API = apiConfig.auth;
 
   this.signup = function (data) {
     return $http.post(API + "/signup", data);
@@ -11,6 +11,14 @@ app.service("authService", function ($http) {
 
   this.forgotPassword = function (data) {
     return $http.post(API + "/forgot-password", data);
+  };
+
+  this.getMyProfile = function () {
+    return $http.get(API + "/me");
+  };
+
+  this.updateMyProfile = function (data) {
+    return $http.put(API + "/me", data);
   };
 
   this.setSession = function (payload) {
@@ -32,6 +40,10 @@ app.service("authService", function ($http) {
 
   this.getUserName = function () {
     return localStorage.getItem("user_name") || "User";
+  };
+
+  this.setUserName = function (name) {
+    localStorage.setItem("user_name", name || "User");
   };
 
   this.isLoggedIn = function () {

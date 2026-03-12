@@ -3,6 +3,7 @@ app.controller("navController", function ($scope, $location, authService) {
     { path: "/dashboard", label: "Dashboard", icon: "bi-speedometer2", adminOnly: false },
     { path: "/cars", label: "Cars", icon: "bi-car-front-fill", adminOnly: false },
     { path: "/bookings", label: "Bookings", icon: "bi-calendar-check", adminOnly: false },
+    { path: "/profile", label: "Profile", icon: "bi-person-gear", adminOnly: false },
     { path: "/admin", label: "Admin", icon: "bi-shield-lock", adminOnly: true },
   ];
 

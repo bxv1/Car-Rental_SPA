@@ -44,6 +44,13 @@ app.config(function ($routeProvider, $httpProvider) {
       title: "My Bookings",
       subtitle: "Track all your reservations in one place.",
     })
+    .when("/profile", {
+      templateUrl: "views/profile.html",
+      controller: "profileController",
+      authRequired: true,
+      title: "My Profile",
+      subtitle: "Update your personal information and password.",
+    })
     .when("/admin", {
       templateUrl: "views/admin.html",
       controller: "adminController",
