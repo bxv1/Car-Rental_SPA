@@ -24,8 +24,9 @@ app.controller("carController", function ($scope, carService, bookingService) {
           }
         });
       })
-      .catch(function () {
-        $scope.errorMessage = "Unable to load cars right now.";
+      .catch(function (err) {
+        $scope.errorMessage =
+          typeof err.data === "string" ? err.data : "Unable to load cars right now.";
       })
       .finally(function () {
         $scope.loading = false;

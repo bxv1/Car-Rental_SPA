@@ -13,8 +13,8 @@ app.controller("adminController", function ($scope, carService) {
       .then(function (res) {
         $scope.cars = res.data;
       })
-      .catch(function () {
-        $scope.errorMessage = "Failed to load cars.";
+      .catch(function (err) {
+        $scope.errorMessage = typeof err.data === "string" ? err.data : "Failed to load cars.";
       })
       .finally(function () {
         $scope.loadingCars = false;

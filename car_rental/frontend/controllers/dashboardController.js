@@ -26,8 +26,9 @@ app.controller("dashboardController", function ($scope, bookingService, authServ
         return b.status === "cancelled";
       }).length;
     })
-    .catch(function () {
-      $scope.errorMessage = "Unable to load dashboard data right now.";
+    .catch(function (err) {
+      $scope.errorMessage =
+        typeof err.data === "string" ? err.data : "Unable to load dashboard data right now.";
     })
     .finally(function () {
       $scope.loading = false;

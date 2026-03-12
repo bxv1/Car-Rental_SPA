@@ -14,7 +14,8 @@ app.service("authService", function ($http) {
   };
 
   this.setSession = function (payload) {
-    localStorage.setItem("token", payload.token);
+    var cleanToken = (payload.token || "").replace(/^Bearer\s+/i, "");
+    localStorage.setItem("token", cleanToken);
     localStorage.setItem("role", payload.user.role);
     localStorage.setItem("user_name", payload.user.name || "Guest");
   };
