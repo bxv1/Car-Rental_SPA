@@ -1,31 +1,15 @@
-app.service("carService",function($http){
+app.service("carService", function ($http) {
+  var API = "http://localhost:5000/api/cars";
 
-const API = "http://localhost:5000/api/cars";
+  this.getCars = function () {
+    return $http.get(API);
+  };
 
-this.getCars = function(){
+  this.addCar = function (car) {
+    return $http.post(API + "/add", car);
+  };
 
-return $http.get(API);
-
-};
-
-this.addCar = function(car){
-
-return $http.post(API+"/add",car,{
-headers:{
-Authorization:localStorage.getItem("token")
-}
-});
-
-};
-
-this.deleteCar = function(id){
-
-return $http.delete(API+"/"+id,{
-headers:{
-Authorization:localStorage.getItem("token")
-}
-});
-
-};
-
+  this.deleteCar = function (id) {
+    return $http.delete(API + "/" + id);
+  };
 });
